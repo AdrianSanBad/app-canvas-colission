@@ -54,13 +54,22 @@ function getDistance(x1, x2, y1, y2) {
     return Math.sqrt(Math.pow(xDistance, 2) + Math.pow(yDistance, 2));
 }
 
+function getRandomColor() {
+    const letters = '0123456789ABCDEF';
+    let color = '#';
+    for (let i = 0; i < 6; i++) {
+        color += letters[Math.floor(Math.random() * 16)];
+    }
+    return color;
+}
+
 let circles = [];
 for (let i = 0; i < 10; i++) {
     let randomX = Math.random() * (window_width - 100) + 50;
     let randomY = Math.random() * (window_height - 100) + 50;
-    let randomRadius = 25;
-    let randomSpeed = 6;
-    circles.push(new Circle(randomX, randomY, randomRadius, "blue", (i + 1).toString(), randomSpeed));
+    let randomRadius = 25 + Math.random() * 25;
+    let randomSpeed = 2 + Math.random() * 2;
+    circles.push(new Circle(randomX, randomY, randomRadius, getRandomColor(), (i + 1).toString(), randomSpeed));
 }
 
 circles.forEach(circle => circle.draw(ctx));
@@ -73,13 +82,15 @@ let updateCircles = function () {
     for (let i = 0; i < circles.length; i++) {
         for (let j = i + 1; j < circles.length; j++) {
             if (getDistance(circles[i].posX, circles[j].posX, circles[i].posY, circles[j].posY) < circles[i].radius + circles[j].radius) {
-                // Intercambiar las direcciones
                 let tempDx = circles[i].dx;
                 let tempDy = circles[i].dy;
                 circles[i].dx = circles[j].dx;
                 circles[i].dy = circles[j].dy;
                 circles[j].dx = tempDx;
                 circles[j].dy = tempDy;
+
+                circles[i].color = getRandomColor();
+                circles[j].color = getRandomColor();
             }
         }
     }
